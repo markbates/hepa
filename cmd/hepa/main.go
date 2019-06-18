@@ -27,12 +27,17 @@ func main() {
 			return
 		}
 		r = strings.NewReader(args[0])
+		args = args[1:]
 	}
 
 	hep := hepa.New()
 
 	hep = hepa.With(hep, filters.Golang())
 	hep = hepa.With(hep, filters.Secrets())
+
+	for _, a := range args {
+		hep = hepa.Clean(hep, []byte(a))
+	}
 	b, err := hep.Clean(r)
 	if err != nil {
 		log.Fatal(err)

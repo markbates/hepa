@@ -4,6 +4,8 @@ import (
 	"bufio"
 	"bytes"
 	"io"
+
+	"github.com/markbates/hepa/filters"
 )
 
 type Purifier struct {
@@ -13,12 +15,16 @@ type Purifier struct {
 
 func (p Purifier) Filter(b []byte) ([]byte, error) {
 	if p.filter == nil {
-		if p.parent != nil {
-			return p.parent.Filter(b)
-		}
-		return homeFilter(b)
+		p.filter = filters.Home()
 	}
-	return p.filter.Filter(b)
+	b, err := p.filter.Filter(b)
+	if err != nil {
+		return b, err
+	}
+	if p.parent != nil {
+		return p.parent.Filter(b)
+	}
+	return b, nil
 }
 
 func (p Purifier) Clean(r io.Reader) ([]byte, error) {
@@ -32,6 +38,7 @@ func (p Purifier) Clean(r io.Reader) ([]byte, error) {
 		return bb.Bytes(), err
 	}
 
+	home := filters.Home()
 	reader := bufio.NewReader(r)
 	for {
 		input, _, err := reader.ReadLine()
@@ -42,12 +49,14 @@ func (p Purifier) Clean(r io.Reader) ([]byte, error) {
 		if err != nil {
 			return nil, err
 		}
-		input, err = homeFilter(input)
+		input, err = home(input)
 		if err != nil {
 			return nil, err
 		}
 		bb.Write(input)
-		bb.Write([]byte("\n"))
+		if len(input) > 0 {
+			bb.Write([]byte("\n"))
+		}
 	}
 
 	return bb.Bytes(), nil
