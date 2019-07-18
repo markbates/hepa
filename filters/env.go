@@ -13,9 +13,9 @@ var env = func() map[string]string {
 		kv := strings.Split(line, "=")
 
 		k, v := kv[0], kv[1]
-		k, v = strings.TrimSpace(k), strings.TrimSpace(v)
+		kt, vt := strings.TrimSpace(k), strings.TrimSpace(v)
 
-		if len(k) == 0 || len(v) == 0 {
+		if len(kt) == 0 || len(vt) == 0 {
 			continue
 		}
 

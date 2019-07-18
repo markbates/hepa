@@ -54,9 +54,9 @@ func (p Purifier) Clean(r io.Reader) ([]byte, error) {
 			return nil, err
 		}
 		bb.Write(input)
-		if len(input) > 0 {
-			bb.Write([]byte("\n"))
-		}
+		// if len(input) > 0 {
+		bb.Write([]byte("\n"))
+		// }
 	}
 
 	return bb.Bytes(), nil
