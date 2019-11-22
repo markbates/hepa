@@ -3,7 +3,7 @@ on: [push]
 jobs:
 
   tests-on:
-    name: ${{matrix.go-version}} ${{matrix.os}} (MODS)
+    name: ${{matrix.go-version}} ${{matrix.os}}
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -20,7 +20,7 @@ jobs:
         go test -race ./...
 
   tests-off:
-    name: ${{matrix.go-version}} ${{matrix.os}} (GOPATH)
+    name: [GOPATH] ${{matrix.go-version}} ${{matrix.os}}
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
