@@ -2,8 +2,8 @@ name: Tests
 on: [push]
 jobs:
 
-  tests-mods:
-    name: ${{matrix.os}} Tests (1.13)
+  tests-on:
+    name: ${{matrix.os}} Tests (Mods/ON)
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -15,12 +15,11 @@ jobs:
 
     - name: Test
       run: |
-        go mod download
         go mod tidy -v
         go test -race ./...
 
-  tests-112-off:
-    name: ${{matrix.os}} Tests (1.12/OFF)
+  tests-off:
+    name: ${{matrix.os}} Tests (Mods/OFF)
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -29,14 +28,6 @@ jobs:
     env:
       GO111MODULE: off
     steps:
-    - name: Dump GitHub context
-      env:
-        GITHUB_CONTEXT: ${{ toJson(github) }}
-      run: echo "$GITHUB_CONTEXT"
-    - name: Dump runner context
-      env:
-        RUNNER_CONTEXT: ${{ toJson(runner) }}
-      run: echo "$RUNNER_CONTEXT"
     - name: Checkout code
       uses: actions/checkout@v1
       with:
@@ -45,6 +36,5 @@ jobs:
       env:
         GOPATH: ${{runner.workspace}}
       run: |
-        echo $GOPATH
         go get -t -v ./...
         go test -race ./...
