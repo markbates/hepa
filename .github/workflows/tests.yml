@@ -28,7 +28,6 @@ jobs:
         os: [macos-latest, windows-latest, ubuntu-latest]
     env:
       GO111MODULE: off
-      GOPATH: ${{ github.workspace}}
     steps:
     - name: Dump GitHub context
       env:
@@ -44,5 +43,6 @@ jobs:
         path: src/github.com/${{ github.repository }}
     - name: Test
       run: |
+        export $GOPATH=${{github.workspace}}
         go get -t -v ./...
         go test -race ./...
