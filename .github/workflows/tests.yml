@@ -35,11 +35,10 @@ jobs:
       run: |
         export PATH=$PATH:$(go env GOPATH)/bin
         export GOPATH=$(go env GOPATH)
+        echo $GOPATH
       shell: bash
     - name: Checkout code
       uses: actions/checkout@v1
-      with:
-        path: $GOPATH/src/github.com/${{ github.repository }}
     - name: Test
       run: |
         go get -t -v ./...
