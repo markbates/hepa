@@ -28,6 +28,7 @@ jobs:
         os: [macos-latest, windows-latest, ubuntu-latest]
     env:
       GO111MODULE: off
+      GOPATH: $PWD/go
     steps:
     - name: Set GOPATH
       # temporary fix
@@ -39,7 +40,7 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v1
       with:
-        path: ./src/github.com/${{ github.repository }}
+        path: go/src/github.com/${{ github.repository }}
     - name: Test
       run: |
         go get -t -v ./...
