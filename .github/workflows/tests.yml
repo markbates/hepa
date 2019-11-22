@@ -42,8 +42,9 @@ jobs:
       with:
         path: src/github.com/${{ github.repository }}
     - name: Test
+      env:
+        GOPATH: ${{github.workspace}}
       run: |
         echo $GOPATH
-        echo pwd
         go get -t -v ./...
         go test -race ./...
