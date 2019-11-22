@@ -28,7 +28,7 @@ jobs:
         os: [macos-latest, windows-latest, ubuntu-latest]
     env:
       GO111MODULE: off
-      GOPATH: $GITHUB_WORKSPACE/go
+      GOPATH: ${ GITHUB_WORKSPACE }/go
     steps:
     - name: Set GOPATH
       # temporary fix
