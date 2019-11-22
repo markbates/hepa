@@ -28,6 +28,7 @@ jobs:
         os: [macos-latest, windows-latest, ubuntu-latest]
     env:
       GO111MODULE: off
+      GOPATH: ${{ runner.workspace}}
     steps:
     - name: Checkout code
       uses: actions/checkout@v1
