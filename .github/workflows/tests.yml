@@ -43,6 +43,7 @@ jobs:
         path: src/github.com/${{ github.repository }}
     - name: Test
       run: |
-        export $GOPATH=${{github.workspace}}
+        echo $GOPATH
+        echo pwd
         go get -t -v ./...
         go test -race ./...
