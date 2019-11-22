@@ -3,12 +3,12 @@ on: [push]
 jobs:
 
   tests-on:
-    name: ${{matrix.os}} Tests (Mods/ON)
+    name: ${{matrix.os}} $${{matrix.go-version}} (Mods/ON)
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         go-version: [1.12.x, 1.13.x]
-        os: [macos, windows-latest, ubuntu-latest]
+        os: [macos, windows, ubuntu]
     steps:
     - name: Check out code into the Go module directory
       uses: actions/checkout@v1
@@ -20,12 +20,12 @@ jobs:
         go test -race ./...
 
   tests-off:
-    name: ${{matrix.os}} Tests (Mods/OFF)
+    name: ${{matrix.os}} $${{matrix.go-version}} (Mods/OFF)
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         go-version: [1.12.x, 1.13.x]
-        os: [macos-latest, windows-latest, ubuntu-latest]
+        os: [macos, windows, ubuntu]
     env:
       GO111MODULE: off
     steps:
