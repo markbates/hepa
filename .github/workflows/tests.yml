@@ -20,7 +20,7 @@ jobs:
         go test -race ./...
 
   tests-off:
-    name: [GOPATH] ${{matrix.go-version}} ${{matrix.os}}
+    name: (GOPATH) ${{matrix.go-version}} ${{matrix.os}}
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
