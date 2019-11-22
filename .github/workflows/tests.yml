@@ -8,12 +8,8 @@ jobs:
     strategy:
       matrix:
         go-version: [1.12.x, 1.13.x]
-        os: [macos-latest, windows-latest, ubuntu-latest]
+        os: [macos, windows-latest, ubuntu-latest]
     steps:
-    - name: Dump matrix context
-      env:
-        MATRIX_CONTEXT: ${{ toJson(matrix) }}
-      run: echo "$MATRIX_CONTEXT"
     - name: Check out code into the Go module directory
       uses: actions/checkout@v1
       with:
