@@ -29,7 +29,6 @@ jobs:
     env:
       GO111MODULE: off
     steps:
-      shell: bash
     - name: Checkout code
       uses: actions/checkout@v1
       with:
