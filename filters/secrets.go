@@ -5,7 +5,7 @@ import (
 	"strings"
 )
 
-func Secrets() FilterFunc {
+func Secrets() FilterFn {
 	return func(b []byte) ([]byte, error) {
 		for k, v := range env {
 			for _, s := range secretSuffixes {

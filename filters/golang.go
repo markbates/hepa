@@ -2,50 +2,40 @@ package filters
 
 import (
 	"bytes"
+	"fmt"
 	"os"
-	"path/filepath"
 )
 
-func Golang() FilterFunc {
+func Golang() FilterFn {
 	return func(b []byte) ([]byte, error) {
-		gp, err := gopath(home)
-		if err != nil {
-			return nil, err
+
+		for _, env := range goEnvs() {
+			fmt.Printf("TODO >> golang.go:13 env %[1]T %[1]v\n", env)
+			r := fmt.Sprintf("$%s", env)
+
+			fmt.Printf("TODO >> golang.go:16 r %[1]T %[1]v\n", r)
+			b = bytes.ReplaceAll(b, []byte(os.Getenv(env)), []byte(r))
+
 		}
 
-		b = bytes.ReplaceAll(b, []byte(gp.Dir), []byte("$GOPATH"))
-
-		gru, err := goroot(gp)
-		if err != nil {
-			return nil, err
-		}
-		b = bytes.ReplaceAll(b, []byte(gru.Dir), []byte("$GOROOT"))
+		fmt.Printf("TODO >> golang.go:21 string(b) %[1]T %[1]v\n", string(b))
 		return b, nil
 	}
 }
 
-func goroot(gp dir) (dir, error) {
-	gru, ok := os.LookupEnv("GOROOT")
-	if !ok {
-		if gp.Err != nil {
-			return gp, gp.Err
-		}
-		gru = filepath.Join(string(gp.Dir), "go")
+func goEnvs() []string {
+	return []string{
+		"GOCACHE",
+		"GOENV",
+		"GOMODCACHE",
+		"GONOPROXY",
+		"GONOSUMDB",
+		"GOPATH",
+		"GOPRIVATE",
+		"GOPROXY",
+		"GOROOT",
+		"GOSUMDB",
+		"GOTOOLDIR",
+		"GOMOD",
 	}
-	return dir{
-		Dir: gru,
-	}, nil
-}
-
-func gopath(home dir) (dir, error) {
-	gp, ok := os.LookupEnv("GOPATH")
-	if !ok {
-		if home.Err != nil {
-			return home, home.Err
-		}
-		gp = filepath.Join(string(home.Dir), "go")
-	}
-	return dir{
-		Dir: gp,
-	}, nil
 }

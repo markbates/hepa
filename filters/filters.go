@@ -1,12 +1,39 @@
 package filters
 
-type FilterFunc func([]byte) ([]byte, error)
+// Filter can be implemented to filter out unwanted data.
+// from a slice of bytes.
+type Filter interface {
+	Filter([]byte) ([]byte, error)
+}
 
-func (f FilterFunc) Filter(b []byte) ([]byte, error) {
+// FilterFn is a convenience type for Filter.
+type FilterFn func([]byte) ([]byte, error)
+
+func (f FilterFn) Filter(b []byte) ([]byte, error) {
+	if f == nil {
+		return b, nil
+	}
 	return f(b)
 }
 
-type dir struct {
-	Dir string
-	Err error
+// func Rinse(p Purifier, s, r []byte) Purifier {
+// 	return WithFunc(p, func(b []byte) ([]byte, error) {
+// 		b = bytes.ReplaceAll(b, s, r)
+// 		return b, nil
+// 	})
+// }
+
+// func Clean(p Purifier, s []byte) Purifier {
+// 	return WithFunc(p, func(b []byte) ([]byte, error) {
+// 		if bytes.Contains(b, s) {
+// 			return []byte{}, nil
+// 		}
+// 		return b, nil
+// 	})
+// }
+
+func Noop() FilterFn {
+	return func(b []byte) ([]byte, error) {
+		return b, nil
+	}
 }
