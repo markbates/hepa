@@ -5,27 +5,25 @@ import (
 	"os"
 )
 
-var home = func() dir {
-	var d dir
-	home, ok := os.LookupEnv("HOME")
-	if !ok {
-		pwd, err := os.Getwd()
-		if err != nil {
-			d.Err = err
-			return d
-		}
-		home = pwd
-	}
-	d.Dir = home
-
-	return d
-}()
-
-func Home() FilterFunc {
+func Home() FilterFn {
 	return func(b []byte) ([]byte, error) {
-		if home.Err != nil {
-			return b, home.Err
+		u, err := os.UserHomeDir()
+
+		if err != nil {
+			return nil, err
 		}
-		return bytes.ReplaceAll(b, []byte(home.Dir), []byte("$HOME")), nil
+
+		return bytes.ReplaceAll(b, []byte(u), []byte("$HOME")), nil
+	}
+}
+
+func PWD() FilterFn {
+	return func(b []byte) ([]byte, error) {
+		u, err := os.Getwd()
+		if err != nil {
+			return nil, err
+		}
+
+		return bytes.ReplaceAll(b, []byte(u), []byte("$PWD")), nil
 	}
 }

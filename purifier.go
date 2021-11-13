@@ -3,65 +3,107 @@ package hepa
 import (
 	"bufio"
 	"bytes"
+	"fmt"
 	"io"
+	"sync"
 
 	"github.com/markbates/hepa/filters"
 )
 
 type Purifier struct {
-	parent *Purifier
 	filter Filter
+	parent *Purifier
+	sync.Mutex
 }
 
-func (p Purifier) Filter(b []byte) ([]byte, error) {
-	if p.filter == nil {
-		p.filter = filters.Home()
+func (p *Purifier) clone() *Purifier {
+	p.Lock()
+	defer p.Unlock()
+
+	return &Purifier{
+		filter: p.filter,
+		parent: p,
 	}
-	b, err := p.filter.Filter(b)
+}
+
+func (p *Purifier) Filter(b []byte) ([]byte, error) {
+	if p == nil {
+		p = &Purifier{}
+	}
+
+	p.Lock()
+
+	if p.filter == nil {
+		p.filter = Noop()
+	}
+
+	f := p.filter
+
+	p.Unlock()
+
+	home := filters.Home()
+
+	b, err := home.Filter(b)
+
+	if err != nil {
+		return nil, err
+	}
+
+	b, err = f.Filter(b)
 	if err != nil {
 		return b, err
 	}
+
 	if p.parent != nil {
 		return p.parent.Filter(b)
 	}
+
 	return b, nil
 }
 
-func (p Purifier) Clean(r io.Reader) ([]byte, error) {
+func (p *Purifier) Clean(r io.Reader) ([]byte, error) {
 	bb := &bytes.Buffer{}
 
-	if p.filter == nil {
-		if p.parent != nil {
-			return p.parent.Clean(r)
-		}
-		_, err := io.Copy(bb, r)
-		return bb.Bytes(), err
+	if p == nil {
+		p = &Purifier{}
 	}
 
-	home := filters.Home()
+	p.Lock()
+
+	if p.filter == nil && p.parent != nil {
+		p.Unlock()
+		return p.parent.Clean(r)
+	}
+
+	p.Unlock()
+
 	reader := bufio.NewReader(r)
+
 	for {
-		input, _, err := reader.ReadLine()
+		line, _, err := reader.ReadLine()
+
 		if err != nil && err == io.EOF {
 			break
 		}
-		input, err = p.Filter(input)
+
+		// filter the line
+		line, err = p.Filter(line)
 		if err != nil {
 			return nil, err
 		}
-		input, err = home(input)
-		if err != nil {
-			return nil, err
-		}
-		bb.Write(input)
-		// if len(input) > 0 {
-		bb.Write([]byte("\n"))
-		// }
+
+		fmt.Fprintln(bb, string(line))
 	}
 
 	return bb.Bytes(), nil
 }
 
-func New() Purifier {
-	return Purifier{}
+// New returns a new Purifier
+// with all the filters added
+func Deep() *Purifier {
+	p := &Purifier{}
+	p = With(p, filters.PWD())
+	p = With(p, filters.Secrets())
+	p = With(p, filters.Golang())
+	return p
 }
