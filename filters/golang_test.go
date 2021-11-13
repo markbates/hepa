@@ -34,7 +34,14 @@ func Test_Golang(t *testing.T) {
 	u, err := os.UserHomeDir()
 	r.NoError(err)
 
-	// fmt.Println(string(b))
-	r.NotContains(string(b), u)
+	act := string(b)
 
+	r.NotContains(act, u)
+
+	// fmt.Println(act)
+
+	r.Contains(act, "$GOPATH")
+	r.Contains(act, "$GOPRIVATE")
+	r.Contains(act, "$GOROOT")
+	r.Contains(act, "$GOTOOLDIR")
 }

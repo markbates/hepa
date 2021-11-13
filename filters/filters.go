@@ -2,7 +2,6 @@ package filters
 
 import (
 	"bytes"
-	"fmt"
 )
 
 // Filter can be implemented to filter out unwanted data.
@@ -43,12 +42,10 @@ func Noop() FilterFn {
 	}
 }
 
-func replace(b []byte, s string, r string) []byte {
-	if len(s) == 0 || len(r) == 0 {
+func replace(b []byte, find string, replace string) []byte {
+	if len(find) == 0 || len(replace) == 0 {
 		return b
 	}
 
-	r = fmt.Sprintf("$%s", r)
-
-	return bytes.ReplaceAll(b, []byte(s), []byte(r))
+	return bytes.ReplaceAll(b, []byte(find), []byte(replace))
 }

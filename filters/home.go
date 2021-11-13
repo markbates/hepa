@@ -13,7 +13,7 @@ func Home() FilterFn {
 			return nil, err
 		}
 
-		return replace(b, u, "HOME"), nil
+		return replace(b, u, "$HOME"), nil
 	}
 }
 
@@ -33,6 +33,6 @@ func PWD() FilterFn {
 			return b, nil
 		}
 
-		return replace(b, u, "PWD"), nil
+		return replace(b, u, "$PWD"), nil
 	}
 }
