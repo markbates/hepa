@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"path/filepath"
+	"strings"
 )
 
 // Filter can be implemented to filter out unwanted data.
@@ -46,7 +47,10 @@ func Noop() FilterFn {
 
 func replace(b []byte, s string, r string) []byte {
 
+	s = strings.TrimPrefix(s, string(filepath.Separator))
+
 	fmt.Printf("TODO >> filters.go:48 s %[1]T %[1]v\n", s)
+
 	r = fmt.Sprintf("$%s%s", r, string(filepath.Separator))
 	fmt.Printf("TODO >> filters.go:50 r %[1]T %[1]v\n", r)
 
