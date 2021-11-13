@@ -41,17 +41,16 @@ func (p *Purifier) Filter(b []byte) ([]byte, error) {
 
 	p.Unlock()
 
-	home := filters.Home()
-
-	b, err := home.Filter(b)
-
-	if err != nil {
-		return nil, err
-	}
-
-	b, err = f.Filter(b)
+	b, err := f.Filter(b)
 	if err != nil {
 		return b, err
+	}
+
+	home := filters.Home()
+
+	b, err = home.Filter(b)
+	if err != nil {
+		return nil, err
 	}
 
 	if p.parent != nil {
