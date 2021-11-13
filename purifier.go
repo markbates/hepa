@@ -16,46 +16,17 @@ type Purifier struct {
 	sync.Mutex
 }
 
-func (p *Purifier) clone() *Purifier {
-	p.Lock()
-	defer p.Unlock()
-
-	return &Purifier{
-		filter: p.filter,
-		parent: p,
-	}
-}
-
 func (p *Purifier) Filter(b []byte) ([]byte, error) {
-	if p == nil {
-		p = &Purifier{}
+	if p == nil || p.filter == nil {
+		return b, nil
 	}
 
 	p.Lock()
-
-	if p.filter == nil {
-		p.filter = Noop()
-	}
-
-	f := p.filter
-
+	b, err := p.filter.Filter(b)
 	p.Unlock()
 
-	home := filters.Home()
-
-	b, err := home.Filter(b)
-
-	if err != nil {
-		return nil, err
-	}
-
-	b, err = f.Filter(b)
 	if err != nil {
 		return b, err
-	}
-
-	if p.parent != nil {
-		return p.parent.Filter(b)
 	}
 
 	return b, nil
@@ -67,15 +38,6 @@ func (p *Purifier) Clean(r io.Reader) ([]byte, error) {
 	if p == nil {
 		p = &Purifier{}
 	}
-
-	p.Lock()
-
-	if p.filter == nil && p.parent != nil {
-		p.Unlock()
-		return p.parent.Clean(r)
-	}
-
-	p.Unlock()
 
 	reader := bufio.NewReader(r)
 
@@ -95,7 +57,17 @@ func (p *Purifier) Clean(r io.Reader) ([]byte, error) {
 		fmt.Fprintln(bb, string(line))
 	}
 
-	return bb.Bytes(), nil
+	if p.parent != nil {
+		return p.parent.Clean(bb)
+	}
+
+	home := filters.Home()
+	b, err := home.Filter(bb.Bytes())
+	if err != nil {
+		return nil, err
+	}
+
+	return b, nil
 }
 
 // New returns a new Purifier

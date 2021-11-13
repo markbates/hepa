@@ -2,6 +2,7 @@ package filters
 
 import (
 	"os"
+	"path/filepath"
 )
 
 func Home() FilterFn {
@@ -12,7 +13,7 @@ func Home() FilterFn {
 			return nil, err
 		}
 
-		return replace(b, u, "HOME"), nil
+		return replace(b, u, "$HOME"), nil
 	}
 }
 
@@ -23,6 +24,15 @@ func PWD() FilterFn {
 			return nil, err
 		}
 
-		return replace(b, u, "PWD"), nil
+		u, err = filepath.Abs(u)
+		if err != nil {
+			return nil, err
+		}
+
+		if len(u) == 0 || u == string(filepath.Separator) {
+			return b, nil
+		}
+
+		return replace(b, u, "$PWD"), nil
 	}
 }

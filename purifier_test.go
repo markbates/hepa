@@ -34,11 +34,11 @@ func Test_Purifier_Filter(t *testing.T) {
 		err  bool
 	}{
 		{name: "clean $HOME by default", exp: `HOME: $HOME`},
-		{name: "clean me", p: WithFunc(&Purifier{}, me), exp: `HOme: $HOme`},
+		{name: "clean me", p: WithFunc(&Purifier{}, me), exp: `HOme: $HOME`},
 		{
 			name: "clean ho/me",
 			p:    WithFunc(WithFunc(&Purifier{}, me), ho),
-			exp:  `home: $home`,
+			exp:  `home: $HOME`,
 		},
 	}
 
