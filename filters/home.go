@@ -1,8 +1,8 @@
 package filters
 
 import (
-	"fmt"
 	"os"
+	"path/filepath"
 )
 
 func Home() FilterFn {
@@ -24,8 +24,12 @@ func PWD() FilterFn {
 			return nil, err
 		}
 
-		fmt.Printf("TODO >> home.go:26 u %[1]T %[1]v\n", u)
-		if len(u) == 0 {
+		u, err = filepath.Abs(u)
+		if err != nil {
+			return nil, err
+		}
+
+		if len(u) == 0 || u == string(filepath.Separator) {
 			return b, nil
 		}
 
