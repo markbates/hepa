@@ -44,6 +44,8 @@ func Noop() FilterFn {
 }
 
 func replace(b []byte, s string, r string) []byte {
+	if len(s) == 0 || len(r) == 0 {
+		return b
 	}
 
 	r = fmt.Sprintf("$%s", r)
