@@ -1,6 +1,7 @@
 package filters
 
 import (
+	"fmt"
 	"os"
 )
 
@@ -21,6 +22,11 @@ func PWD() FilterFn {
 		u, err := os.Getwd()
 		if err != nil {
 			return nil, err
+		}
+
+		fmt.Printf("TODO >> home.go:26 u %[1]T %[1]v\n", u)
+		if len(u) == 0 {
+			return b, nil
 		}
 
 		return replace(b, u, "PWD"), nil
