@@ -43,16 +43,18 @@ func (g *golang) Filter(b []byte) ([]byte, error) {
 		b = replace(b, v, k)
 	}
 
-	return replace(b, "$GOMOD", "go.mod"), nil
+	b = replace(b, "$GOMOD", "\"go.mod\"")
+	b = replace(b, "/usr/local", "$USR")
+	return b, nil
 }
 
 func (g *golang) keys() []string {
 	return []string{
+		"GOMOD",
 		"GOGCCFLAGS",
 		"GOROOT",
 		"GOTOOLDIR",
 		"GOPATH",
-		"GOMOD",
 		"GOPRIVATE",
 	}
 }

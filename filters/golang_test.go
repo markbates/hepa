@@ -3,6 +3,7 @@ package filters
 import (
 	"bytes"
 	"context"
+	"fmt"
 	"os"
 	"os/exec"
 	"testing"
@@ -38,10 +39,11 @@ func Test_Golang(t *testing.T) {
 
 	r.NotContains(act, u)
 
-	// fmt.Println(act)
+	fmt.Println(act)
 
 	r.Contains(act, "$GOPATH")
 	r.Contains(act, "$GOPRIVATE")
 	r.Contains(act, "$GOROOT")
 	r.Contains(act, "$GOTOOLDIR")
+	r.Contains(act, `"go.mod"`)
 }
