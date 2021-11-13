@@ -5,9 +5,10 @@ func WithFunc(p *Purifier, fn FilterFn) *Purifier {
 }
 
 func With(p *Purifier, f Filter) *Purifier {
-	c := p.clone()
+	wp := &Purifier{
+		parent: p,
+		filter: f,
+	}
 
-	c.filter = f
-
-	return c
+	return wp
 }

@@ -6,7 +6,6 @@ import (
 
 func Golang() FilterFn {
 	return func(b []byte) ([]byte, error) {
-
 		for _, env := range goEnvs() {
 			b = replace(b, os.Getenv(env), env)
 		}
