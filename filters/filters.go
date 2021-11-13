@@ -45,6 +45,6 @@ func Noop() FilterFn {
 }
 
 func replace(b []byte, s string, r string) []byte {
-	r = fmt.Sprintf("$%s%s", r, string(filepath.Separator))
+	r = fmt.Sprintf("$%s%s/", r, string(filepath.Separator))
 	return bytes.ReplaceAll(b, []byte(s), []byte(r))
 }
