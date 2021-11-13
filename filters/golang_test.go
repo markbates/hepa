@@ -45,4 +45,5 @@ func Test_Golang(t *testing.T) {
 	r.Contains(act, "$GOPRIVATE")
 	r.Contains(act, "$GOROOT")
 	r.Contains(act, "$GOTOOLDIR")
+	r.Contains(act, `"go.mod"`)
 }
