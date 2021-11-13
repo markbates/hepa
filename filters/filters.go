@@ -45,6 +45,11 @@ func Noop() FilterFn {
 }
 
 func replace(b []byte, s string, r string) []byte {
+
+	fmt.Printf("TODO >> filters.go:48 s %[1]T %[1]v\n", s)
 	r = fmt.Sprintf("$%s%s/", r, string(filepath.Separator))
+	fmt.Printf("TODO >> filters.go:50 r %[1]T %[1]v\n", r)
+
+	fmt.Printf("TODO >> filters.go:53 string(b) %[1]T %[1]v\n", string(b))
 	return bytes.ReplaceAll(b, []byte(s), []byte(r))
 }
