@@ -1,7 +1,6 @@
 package filters
 
 import (
-	"bytes"
 	"os"
 )
 
@@ -13,7 +12,7 @@ func Home() FilterFn {
 			return nil, err
 		}
 
-		return bytes.ReplaceAll(b, []byte(u), []byte("$HOME")), nil
+		return replace(b, u, "HOME"), nil
 	}
 }
 
@@ -24,6 +23,6 @@ func PWD() FilterFn {
 			return nil, err
 		}
 
-		return bytes.ReplaceAll(b, []byte(u), []byte("$PWD")), nil
+		return replace(b, u, "PWD"), nil
 	}
 }

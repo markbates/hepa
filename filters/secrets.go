@@ -1,7 +1,6 @@
 package filters
 
 import (
-	"bytes"
 	"strings"
 )
 
@@ -12,7 +11,9 @@ func Secrets() FilterFn {
 				if !strings.HasSuffix(k, s) {
 					continue
 				}
-				b = bytes.ReplaceAll(b, []byte(v), []byte(mask()))
+
+				b = replace(b, v, "****")
+				// b = bytes.ReplaceAll(b, []byte(v), []byte(mask()))
 				break
 			}
 		}

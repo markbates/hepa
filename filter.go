@@ -1,6 +1,8 @@
 package hepa
 
-import "github.com/markbates/hepa/filters"
+import (
+	"github.com/markbates/hepa/filters"
+)
 
 // Filter can be implemented to filter out unwanted data.
 // from a slice of bytes.

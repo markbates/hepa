@@ -1,5 +1,11 @@
 package filters
 
+import (
+	"bytes"
+	"fmt"
+	"path/filepath"
+)
+
 // Filter can be implemented to filter out unwanted data.
 // from a slice of bytes.
 type Filter interface {
@@ -36,4 +42,9 @@ func Noop() FilterFn {
 	return func(b []byte) ([]byte, error) {
 		return b, nil
 	}
+}
+
+func replace(b []byte, s string, r string) []byte {
+	r = fmt.Sprintf("$%s%s", r, string(filepath.Separator))
+	return bytes.ReplaceAll(b, []byte(s), []byte(r))
 }
