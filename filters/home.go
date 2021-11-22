@@ -36,3 +36,9 @@ func PWD() FilterFn {
 		return replace(b, u, "$PWD"), nil
 	}
 }
+
+func Replace(s string, r string) FilterFn {
+	return func(b []byte) ([]byte, error) {
+		return replace(b, s, r), nil
+	}
+}
