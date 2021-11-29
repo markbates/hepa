@@ -35,6 +35,7 @@ func (g *golang) Filter(b []byte) ([]byte, error) {
 
 	for _, k := range g.keys() {
 		v := env[k]
+		v = strings.TrimSpace(v)
 		if len(v) == 0 {
 			continue
 		}
