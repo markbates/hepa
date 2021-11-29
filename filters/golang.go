@@ -56,7 +56,7 @@ func (g *golang) keys() []string {
 		"GOROOT",
 		"GOTOOLDIR",
 		"GOPATH",
-		"GOPRIVATE",
+		// "GOPRIVATE",
 	}
 }
 
